@@ -14,7 +14,6 @@
 #include <math.h>
 #include "Node.h"
 #include "Functions.h"
-#include "CompileTimeConstants.h"
 #include "ModelParameters.hpp"
 
 
@@ -41,10 +40,10 @@ int main(int argc, char* argv[]) {
 	uniform_real_distribution<double> unif_dist(0.0, 1.0);
 
 	// I initialize the X, Y, connect_x and connect_y vectors that will be used to generate the interaction matrix
-	vector<double> X(3 * genome_space, 0);
-	vector<double> Y(3 * genome_space, 0);
-	vector<bool> connect_x(3 * genome_space, false);
-	vector<bool> connect_y(3 * genome_space, false);
+	vector<double> X(3 * param.GenomeSpace(), 0);
+	vector<double> Y(3 * param.GenomeSpace(), 0);
+	vector<bool> connect_x(3 * param.GenomeSpace(), false);
+	vector<bool> connect_y(3 * param.GenomeSpace(), false);
 	//// I populate X & Y using the default_random_generator and normal_distribution
 	for (int i = 0; i < X.size(); i++) { X[i] = norm_dist(generator); }
 	for (int i = 0; i < Y.size(); i++) { Y[i] = norm_dist(generator); }
@@ -63,7 +62,7 @@ int main(int argc, char* argv[]) {
 	// If so I will have specified so in the commandline parameters.
 	// I just run CheckCorrelations and end the program
 	if (param.checking_correlation) {
-		CheckCorrelations(X, Y, connect_x, connect_y);
+		CheckCorrelations(X, Y, connect_x, connect_y, param.genome_length);
 		return 0;
 	}
 
@@ -81,7 +80,7 @@ int main(int argc, char* argv[]) {
 
 	// Randomly assign unique genomes to each Node object
 	//// GenerateInitialGenomes creates a vector of the decimal representations of choosen genomes
-	vector<int> initial_genomes = GenerateInitialGenomes(param.initial_population_size, unif_dist, generator);
+	vector<int> initial_genomes = GenerateInitialGenomes(param.initial_population_size, unif_dist, generator, param.GenomeSpace());
 	//// Initialize iterator for vector
 	list<Node>::iterator itr = node_list.begin();
 	for (int i = 0; i < node_list.size(); ++i) {
@@ -124,16 +123,16 @@ int main(int argc, char* argv[]) {
 		//// Then set iterator to selected species and retrieve its genome
 		itr = node_list.begin();
 		IterateCyclically(itr, node_list, temp_rand_index);
-		bitset<genome_size> old_genome = itr->ReturnGenome();
+		genome_t old_genome = itr->ReturnGenome();
 		//// Now add a species without specifying its genome and set the iterator to the newly added species.
 		node_list.push_back(Node(highest_id));
 		itr = --node_list.end();
 		//// Then use Mutate to set the species' genome to a bitstring 1 Hamming distance from old_genome
-		itr->Mutate(old_genome, unif_dist, generator);
+		itr->Mutate(old_genome, unif_dist, generator, param.genome_length);
 
 		// Check if mutant already existed among living species
 		//// Retrieve the newly created genome
-		bitset<genome_size> new_genome = itr->ReturnGenome();
+		genome_t new_genome = itr->ReturnGenome();
 		//// Create a flag for detecting whether the genome is a duplicate
 		bool new_is_duplicate = false;
 		//// Check each nodes to see if its genome matches new_genome until (1) the duplicate flag is set off or (2) all

@@ -66,7 +66,7 @@ vector<vector<double>> RetrieveGraphInfo(list<Node>& node_list) {
 }
 
 // Pick which species exist in initial network
-vector<int> GenerateInitialGenomes(int network_size, uniform_real_distribution<double> dist, default_random_engine gen) {
+vector<int> GenerateInitialGenomes(int network_size, uniform_real_distribution<double> dist, default_random_engine gen, long genome_space) {
 	//// Initialize vector of bools of a size equal to the number of possible species. Each bool represents whether
 	//// that species has been choosen yet to exist in the initial network. Initially all bools are false.
 	vector<bool> genome_options(genome_space, false);
@@ -153,11 +153,11 @@ bool UpdateNodeList(list<Node>& node_list, bool zero_fit_death) {
 }
 
 // This function calculates the matrix elements of the interaction matrix
-double GetCoefficient(bitset<genome_size> genome_a, bitset<genome_size> genome_b, vector<double>& X, vector<double>& Y,
+double GetCoefficient(genome_t genome_a, genome_t genome_b, vector<double>& X, vector<double>& Y,
 	vector<bool>& connect_x, vector<bool>& connect_y) {
 
 	// Performs the exclusive or operation between the two genome bitsets
-	bitset<genome_size> genome_aXORb = genome_a;
+	genome_t genome_aXORb = genome_a;
 	genome_aXORb ^= genome_b;
 
 	// Stores the decimal representations of the two genomes and the exclusive or of them into ints
@@ -182,7 +182,7 @@ double GetCoefficient(bitset<genome_size> genome_a, bitset<genome_size> genome_b
 
 // I didn't comment out this function in depth, but it essentially calculates the correlation between the coefficients of
 // interaction for pairs of nodes as a function of the Hamming distance between the pairs
-void CheckCorrelations(vector<double>& x, vector<double>& y, vector<bool>& x_connect, vector<bool>& y_connect) {
+void CheckCorrelations(vector<double>& x, vector<double>& y, vector<bool>& x_connect, vector<bool>& y_connect, long genome_size) {
 	vector<double> same(2 * genome_size + 1, 0);
 	vector<double> coeff_prod(2 * genome_size + 1, 0);
 	vector<double> mean_coeff_1(2 * genome_size + 1, 0);
@@ -193,12 +193,13 @@ void CheckCorrelations(vector<double>& x, vector<double>& y, vector<bool>& x_con
 	double mean_value = 0;
 	double total_amount = 0;
 	vector<double> total(2 * genome_size + 1, 0);
+  long genome_space = 1 << genome_size;
 	for (int i = 0; i < genome_space; ++i) {
 		for (int j = 0; j < genome_space; ++j) {
 			if (i != j) {
-				bitset<genome_size> one_genome = i;
-				bitset<genome_size> other_genome = j;
-				bitset<genome_size> mixed_genome = one_genome;
+				genome_t one_genome = i;
+				genome_t other_genome = j;
+				genome_t mixed_genome = one_genome;
 				mixed_genome ^= other_genome;
 				int number = mixed_genome.to_ulong();
 				bool connect;
@@ -216,10 +217,10 @@ void CheckCorrelations(vector<double>& x, vector<double>& y, vector<bool>& x_con
 				for (int l = 0; l < genome_space; ++l) {
 					for (int m = 0; m < genome_space; ++m) {
 						if ((l != m) && (genome_space * i + j >= genome_space * l + m)) {
-							bitset<genome_size> one_genome_2 = l;
-							bitset<genome_size> other_genome_2 = m;
+							genome_t one_genome_2 = l;
+							genome_t other_genome_2 = m;
 							int number_b = other_genome_2.to_ulong();
-							bitset<genome_size> mixed_genome = one_genome_2;
+							genome_t mixed_genome = one_genome_2;
 							mixed_genome ^= other_genome_2;
 							int number = mixed_genome.to_ulong();
 							bool connect_2;

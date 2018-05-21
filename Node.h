@@ -2,10 +2,10 @@
 #include <bitset>
 #include <vector>
 #include <map>
-#include "CompileTimeConstants.h"
 
 using namespace std;
 
+typedef bitset<64> genome_t;
 
 class Node {
 public:
@@ -21,7 +21,7 @@ public:
 
 	void UpdateSum();
 
-	void Mutate(bitset<genome_size>, uniform_real_distribution<double>, default_random_engine);
+	void Mutate(genome_t, uniform_real_distribution<double>, default_random_engine, long genome_size);
 
 	double ReturnSum() { return fitness; }
 
@@ -39,7 +39,7 @@ public:
 
 	vector<double> ReturnOutWardEdges(list<Node>&, list<Node>::iterator);
 
-	bitset<genome_size> ReturnGenome() { return genome; }
+	genome_t ReturnGenome() { return genome; }
 
 	void AssignGenome(int gen) { genome = gen; }
 
@@ -59,5 +59,5 @@ protected:
 	map<Node*, double> outwardly_directed_edges;
 
 	// Bitstring that represents this node's genome
-	bitset<genome_size> genome;
+	genome_t genome;
 };

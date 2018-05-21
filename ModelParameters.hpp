@@ -9,10 +9,11 @@
 
 class ModelParameters {
 public:
-  ModelParameters(bool check_cor, bool zero_f_ext, long init_pop_size,
+  ModelParameters(bool check_cor, bool zero_f_ext, long genome_l, long init_pop_size,
                   double density, long total_steps, long output_steps, long s) :
       checking_correlation(check_cor),
       zero_fitness_extinction(zero_f_ext),
+      genome_length(genome_l),
       initial_population_size(init_pop_size),
       link_density(density),
       total_steps(total_steps),
@@ -20,11 +21,15 @@ public:
       seed(s) {};
   const bool checking_correlation;
   const bool zero_fitness_extinction;  // true: make zero-fitness species go extinct. false: let it survive.
+  const long genome_length;
   const long initial_population_size;
   const double link_density; // valid only if fixed_degree is false
   const long total_steps;
   const long output_steps;
   const long seed;
+  long GenomeSpace() const {
+    return 1 << genome_length;
+  }
 
   void Print() {
     std::cout
@@ -37,27 +42,29 @@ public:
   }
 
   static ModelParameters Load(int argc, char** argv) {
-    if( argc != 8 ) {
+    if( argc != 9 ) {
       std::cerr << "[Error] invalid number of arguments" << std::endl;
       std::cerr << "  Usage : ./a.out "
           << "<1:checking_correlation:bool> "
           << "<2:zero_fitness_extinction:bool> "
-          << "<3:initial_population_size:int> "
-          << "<4:degree_density:double> "
-          << "<5:total_steps:int> "
-          << "<6:output_step:int> "
-          << "<7:seed:int> "
+          << "<3:genome_length:int> "
+          << "<4:initial_population_size:int> "
+          << "<5:degree_density:double> "
+          << "<6:total_steps:int> "
+          << "<7:output_step:int> "
+          << "<8:seed:int> "
           << std::endl;
     }
     bool check_corr = atoi(argv[1]) != 0;
     bool zero_fitness_ext = atoi(argv[2]) != 0;
-    long init_pop_size = atol(argv[3]);
-    double c = atof(argv[4]);
-    long total_steps = atol(argv[5]);
-    long output_steps = atol(argv[6]);
-    long seed = atol(argv[7]);
+    long genome_length = atoi(argv[3]);
+    long init_pop_size = atol(argv[4]);
+    double c = atof(argv[5]);
+    long total_steps = atol(argv[6]);
+    long output_steps = atol(argv[7]);
+    long seed = atol(argv[8]);
 
-    ModelParameters param(check_corr, zero_fitness_ext, init_pop_size, c, total_steps, output_steps, seed);
+    ModelParameters param(check_corr, zero_fitness_ext, genome_length, init_pop_size, c, total_steps, output_steps, seed);
     return std::move(param);
   }
 };

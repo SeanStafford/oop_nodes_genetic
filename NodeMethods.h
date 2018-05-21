@@ -1,11 +1,10 @@
 #pragma once
 
-#include "CompileTimeConstants.h"
 #include "Node.h"
 #include "Functions.h"
 
 // Randomly choose one bit to flip. Flip the choosen bit. Then set the modified bitstring as the genome.
-void Node::Mutate(bitset < genome_size> old_genome, uniform_real_distribution<double> dist, default_random_engine gen) {
+void Node::Mutate(genome_t old_genome, uniform_real_distribution<double> dist, default_random_engine gen, long genome_size) {
 	int rand_index = dist(gen) * genome_size;
 	old_genome[rand_index] = !old_genome[rand_index];
 	genome = old_genome;

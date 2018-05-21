@@ -4,7 +4,6 @@ project(oop_nodes_genetic)
 set(CMAKE_CXX_STANDARD 11)
 
 add_executable(oop_nodes_genetic
-        CompileTimeConstants.h
         FunctionDeclarations.h
         Functions.h
         Node.h

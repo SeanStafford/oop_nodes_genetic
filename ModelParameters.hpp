@@ -54,6 +54,7 @@ public:
           << "<7:output_step:int> "
           << "<8:seed:int> "
           << std::endl;
+      throw "invalid number of arguments";
     }
     bool check_corr = atoi(argv[1]) != 0;
     bool zero_fitness_ext = atoi(argv[2]) != 0;
@@ -63,6 +64,13 @@ public:
     long total_steps = atol(argv[6]);
     long output_steps = atol(argv[7]);
     long seed = atol(argv[8]);
+
+    if( init_pop_size > (1<<genome_length)) {
+      throw "init_pop_size is too large";
+    }
+    if( total_steps < output_steps ) {
+      throw "output_steps must be smaller than total_steps";
+    }
 
     ModelParameters param(check_corr, zero_fitness_ext, genome_length, init_pop_size, c, total_steps, output_steps, seed);
     return std::move(param);

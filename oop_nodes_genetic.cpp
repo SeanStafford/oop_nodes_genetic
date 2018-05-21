@@ -15,6 +15,7 @@
 #include "Node.h"
 #include "Functions.h"
 #include "CompileTimeConstants.h"
+#include "ModelParameters.hpp"
 
 
 
@@ -22,9 +23,9 @@ using namespace std;
 int main(int argc, char* argv[]) {
 	// First I put all command line parameters into an array
 	//// I declare the array
-	double model_parameters[num_input_params];
+	ModelParameters param = ModelParameters::Load(argc, argv);
+	param.Print();
 	//// I modify the array within the function to include command line parameters
-	GetModelParameters(model_parameters, argc, argv);
 
 	// Initialize random generators
 	// Use seed given from command line unless given seed is 0. Then uses time(0) to generate seed randomly
@@ -35,7 +36,7 @@ int main(int argc, char* argv[]) {
 	////// choose which species are in the initial community
 	////// choose which species is mutated to form new species
 	////// choose which bit is flipped when creating a mutant species
-	default_random_engine generator(model_parameters[8] ? model_parameters[8] : time(0));
+	default_random_engine generator(param.seed ? param.seed : time(0));
 	normal_distribution<double> norm_dist(0, 1);
 	uniform_real_distribution<double> unif_dist(0.0, 1.0);
 
@@ -52,16 +53,16 @@ int main(int argc, char* argv[]) {
 	//// vector to determine if they are connected to the probability of a bool in each vector being true must be
 	//// sqrt(c) to make the probability of connection c
 	for (int i = 0; i < connect_x.size(); i++) {
-		if (unif_dist(generator) < sqrt(model_parameters[5])) { connect_x[i] = true; }
+		if (unif_dist(generator) < sqrt(param.link_density)) { connect_x[i] = true; }
 	}
 	for (int i = 0; i< connect_y.size(); i++) {
-		if (unif_dist(generator) < sqrt(model_parameters[5])) { connect_y[i] = true; }
+		if (unif_dist(generator) < sqrt(param.link_density)) { connect_y[i] = true; }
 	}
 
 	// Sometimes I am just interested in checking how correlated the interaction matrix is.
 	// If so I will have specified so in the commandline parameters.
 	// I just run CheckCorrelations and end the program
-	if (model_parameters[0]) {
+	if (param.checking_correlation) {
 		CheckCorrelations(X, Y, connect_x, connect_y);
 		return 0;
 	}
@@ -74,13 +75,13 @@ int main(int argc, char* argv[]) {
 	int highest_id = 0;
 	//// The linked list is filled with Node objects that don't have any attributes yet except the node counter
 	//// model_parameters[4] is the commandline parameter for initial community size 
-	for (int i = 0; i < model_parameters[4]; ++i) { node_list.push_back(Node(highest_id)); }
+	for (int i = 0; i < param.initial_population_size; ++i) { node_list.push_back(Node(highest_id)); }
 	//// cout a progress report
 	PrintOutMessage(1);
 
 	// Randomly assign unique genomes to each Node object
 	//// GenerateInitialGenomes creates a vector of the decimal representations of choosen genomes
-	vector<int> initial_genomes = GenerateInitialGenomes(model_parameters[4], unif_dist, generator);
+	vector<int> initial_genomes = GenerateInitialGenomes(param.initial_population_size, unif_dist, generator);
 	//// Initialize iterator for vector
 	list<Node>::iterator itr = node_list.begin();
 	for (int i = 0; i < node_list.size(); ++i) {
@@ -101,7 +102,7 @@ int main(int argc, char* argv[]) {
 	// Dispose of any Node objects whose species do not survive
 	//// model_parameters[2] is a bool from commandline that signals whether 0 fitness species survive
 	//// UpdateNodeList only returns False, ending the while loop, once all remaining species survive
-	while (UpdateNodeList(node_list, model_parameters[2])) {};
+	while (UpdateNodeList(node_list, param.zero_fitness_extinction)) {};
 	//// cout a progress report
 	PrintOutMessage(4);
 	cout << "The initial population size is " << node_list.size() << endl;
@@ -114,7 +115,7 @@ int main(int argc, char* argv[]) {
 	int step = 0;
 	//// While loop can be ended if either (1) all Node objects are gone or (2) The number of steps has exceeded the
 	//// the amount specified by the commandline parameter model_parameters[6]
-	while (node_list.size() && (++step <= model_parameters[6])) {
+	while (node_list.size() && (++step <= param.total_steps)) {
 		// Add a new mutant species to the network
 		//// First, use uniform_real_distribution to select one of the existing species. The mutant introduced to the network will be
 		//// mutated from this species
@@ -152,11 +153,11 @@ int main(int argc, char* argv[]) {
 		//// Otherwise generate edges for each node and dispose of any nodes that can no longer survive
 		else {
 			itr->PickEdgesToForm(node_list, itr, X, Y, connect_x, connect_y);
-			while (UpdateNodeList(node_list, model_parameters[2])) {};
+			while (UpdateNodeList(node_list, param.zero_fitness_extinction)) {};
 		}
 
 		// Every x steps print the network size to the output file. x is specified by the commandline parameter model_parameters[7]
-		if (step % (int)model_parameters[7] == 0) {
+		if (step % param.output_steps == 0) {
 			output_file << node_list.size() << endl;
 		}
 	}

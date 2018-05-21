@@ -2,6 +2,8 @@
 #include <bitset>
 #include <vector>
 #include <map>
+#include <list>
+#include <random>
 
 using namespace std;
 

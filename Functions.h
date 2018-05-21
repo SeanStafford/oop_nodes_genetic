@@ -1,8 +1,6 @@
 #pragma once
 
 #include <random>
-#include "FunctionDeclarations.h"
-#include "NodeMethods.h"
 
 class Node;
 
@@ -90,7 +88,7 @@ vector<int> GenerateInitialGenomes(int network_size, uniform_real_distribution<d
 
 // Allows my iterator to loop back to begining
 //// loop range = 1 by default (See declaration)
-void IterateCyclically(list<Node>::iterator& my_iterator, list<Node>& my_list, int loop_range) {
+void IterateCyclically(list<Node>::iterator& my_iterator, list<Node>& my_list, int loop_range = 1) {
 	for (int i = 0; i < loop_range; ++i) {
 		++my_iterator;
 		if (my_iterator == my_list.end()) { my_iterator = my_list.begin(); }

@@ -14,6 +14,7 @@
 #include <math.h>
 #include "Node.h"
 #include "Functions.h"
+#include "NodeMethods.h"
 #include "ModelParameters.hpp"
 
 

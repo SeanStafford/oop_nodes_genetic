@@ -38,9 +38,7 @@ public:
 
 	int CountOutDegree() { return outwardly_directed_edges.size(); }
 
-	int ReturnID() { return id; }
-
-	vector<double> ReturnOutWardEdges(list<Node>&, list<Node>::iterator);
+	int ReturnID() const { return id; }
 
 	genome_t ReturnGenome() const { return genome; }
 

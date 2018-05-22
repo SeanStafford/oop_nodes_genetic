@@ -77,36 +77,3 @@ void Node::Disentangle() {
 	}
 }
 
-// This method is left over from when I was using the migration model and I have not used it recently
-vector<double> Node::ReturnOutWardEdges(list<Node>& node_list, list<Node>::iterator this_element) {
-
-	int node_tally = node_list.size();
-
-	int initial_size = outwardly_directed_edges.size();
-
-	vector<double> alloutwardedges(node_tally, 0);
-
-	vector<vector<double>> outwardedgeinfo(initial_size, vector<double>(2));
-
-	int i = 0;
-	map<Node*, double>::iterator temp_itr_out;
-	for (temp_itr_out = outwardly_directed_edges.begin();
-		temp_itr_out != outwardly_directed_edges.end(); ++temp_itr_out) {
-		outwardedgeinfo[i][0] = (temp_itr_out->first)->id;
-		outwardedgeinfo[i][1] = temp_itr_out->second;
-		i++;
-	}
-
-	list<Node>::iterator itr = node_list.begin();
-
-	int next_outward_edge_index = 0;
-	for (int i = 1; i < node_tally; ++i) {
-		IterateCyclically(itr, node_list);
-		if (next_outward_edge_index >= outwardedgeinfo.size()) { break; }
-		else if (itr->id == outwardedgeinfo[next_outward_edge_index][0]) {
-			alloutwardedges[i] = outwardedgeinfo[next_outward_edge_index][1];
-			next_outward_edge_index++;
-		}
-	}
-	return alloutwardedges;
-}

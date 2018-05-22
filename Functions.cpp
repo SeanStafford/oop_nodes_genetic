@@ -9,57 +9,6 @@ void PrintOutMessage(int message_id) {
 	else if (message_id == 4) { cout << "updated initial community" << endl; }
 }
 
-// This function is left over from when I was using the migration model and I have not used it recently
-vector<vector<float>> MeasureDegreeDistribution(list<Node>& node_list) {
-	// I will create a list with elements f_i = percent of nodes with i degree
-	// Initially I will make it size 37, but it can expand if necessary
-	int initial_size = 37;
-
-	vector<vector<float>> degree_distributions(2, vector<float>(initial_size));
-	int degree_value[2];
-
-	list<Node>::iterator itr;
-	for (itr = node_list.begin(); itr != node_list.end(); itr++) {
-		degree_value[0] = itr->CountInDegree();
-		degree_value[1] = itr->CountOutDegree();
-
-		for (int i = 0; i <= 1; i++) {
-			if (degree_value[i] > degree_distributions[i].size()) {
-				degree_distributions[i].resize(degree_value[i] + 1);
-			}
-			degree_distributions[i][degree_value[i]]++;
-		}
-	}
-
-	int node_tally = node_list.size();
-
-	for (int i = 0; i <= 1; i++) {
-		for (int j = 0; j < degree_distributions[i].size(); j++) {
-			degree_distributions[i][j] = degree_distributions[i][j] / node_tally;
-		}
-	}
-
-	return degree_distributions;
-}
-
-// This function is left over from when I was using the migration model and I have not used it recently
-vector<vector<double>> RetrieveGraphInfo(list<Node>& node_list) {
-	// I will create a list with elements f_i = percent of nodes with i degree
-	// Initially I will make it size 37, but it can expand if necessary
-	int node_tally = node_list.size();
-
-	vector<vector<double>> graph_data(node_tally, vector<double>(node_tally));
-
-	list<Node>::iterator itr;
-	int i = 0;
-	for (itr = node_list.begin(); itr != node_list.end(); itr++) {
-		graph_data[i] = itr->ReturnOutWardEdges(node_list, itr);
-		i++;
-	}
-
-	return graph_data;
-}
-
 // Pick which species exist in initial network
 vector<int> GenerateInitialGenomes(int network_size, uniform_real_distribution<double> dist, default_random_engine gen, long genome_space) {
 	//// Initialize vector of bools of a size equal to the number of possible species. Each bool represents whether
@@ -81,15 +30,6 @@ vector<int> GenerateInitialGenomes(int network_size, uniform_real_distribution<d
 		genome_list[i] = temp_rand - 1;
 	}
 	return genome_list;
-}
-
-// Allows my iterator to loop back to begining
-//// loop range = 1 by default (See declaration)
-void IterateCyclically(list<Node>::iterator& my_iterator, list<Node>& my_list, int loop_range) {
-	for (int i = 0; i < loop_range; ++i) {
-		++my_iterator;
-		if (my_iterator == my_list.end()) { my_iterator = my_list.begin(); }
-	}
 }
 
 // Checks if any recently updated nodes need to be deleted

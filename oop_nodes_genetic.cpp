@@ -109,10 +109,10 @@ int main(int argc, char* argv[]) {
 
 	// Main While Loop
 	//// Initialize a timestep counter for the main while loop
-	int step = 0;
 	//// While loop can be ended if either (1) all Node objects are gone or (2) The number of steps has exceeded the
 	//// the amount specified by the commandline parameter model_parameters[6]
-	while (node_list.size() && (++step <= param.total_steps)) {
+	for( int step = 0; step < param.total_steps; step++) {
+		if( node_list.size() == 0 ) { break; }
 		// Add a new mutant species to the network
 		//// First, use uniform_real_distribution to select one of the existing species. The mutant introduced to the network will be
 		//// mutated from this species

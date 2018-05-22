@@ -18,7 +18,7 @@ vector<int> GenerateInitialGenomes(int network_size, uniform_real_distribution<d
 bool UpdateNodeList(list<Node>& node_list, bool zero_fit_death);
 
 // This function calculates the matrix elements of the interaction matrix
-double GetCoefficient(genome_t genome_a, genome_t genome_b, const vector<double>& X, const vector<double>& Y,
+double GetCoefficient(const genome_t a, const genome_t b, const vector<double>& X, const vector<double>& Y,
 	const vector<bool>& connect_x, const vector<bool>& connect_y);
 
 // I didn't comment out this function in depth, but it essentially calculates the correlation between the coefficients of

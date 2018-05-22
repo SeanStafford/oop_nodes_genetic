@@ -54,26 +54,25 @@ void Node::FormInwardEdge(Node* node_giving_edge, double coeff) {
 }
 
 void Node::UpdateSum() {
-	fitness = 0;
-	map<Node*, double>::iterator temp_itr;
-	for (temp_itr = inwardly_directed_edges.begin(); temp_itr != inwardly_directed_edges.end(); ++temp_itr) {
-		fitness += temp_itr->second;
+  double sum = 0.0;
+	for( auto& pair : inwardly_directed_edges ) {
+		sum += pair.second;
 	}
+	fitness = sum;
 }
 
 // If I do not remove the map entries of species that have died, the program crashes. This method takes care of that
 void Node::Disentangle() {
-	map<Node*, double>::iterator temp_itr_in;
-	for (temp_itr_in = inwardly_directed_edges.begin(); temp_itr_in != inwardly_directed_edges.end(); ++temp_itr_in) {
-		map<Node*, double>& out_ptrs = (temp_itr_in->first)->outwardly_directed_edges;
-		out_ptrs.erase(out_ptrs.find(this));
+	for(auto & inlink : inwardly_directed_edges) {
+		Node* neighbor = inlink.first;
+		auto& n_links = neighbor->outwardly_directed_edges;
+		n_links.erase( n_links.find(this) );
 	}
-	map<Node*, double>::iterator temp_itr_out;
-	for (temp_itr_out = outwardly_directed_edges.begin(); temp_itr_out != outwardly_directed_edges.end(); ++temp_itr_out) {
-		// Removing a positive edge to a node could cause its fitness to become non-positive so I flag it when this happens
-		if (temp_itr_out->second > 0) { (temp_itr_out->first)->recently_updated = true; }
-		map<Node*, double>& in_ptrs = (temp_itr_out->first)->inwardly_directed_edges;
-		in_ptrs.erase(in_ptrs.find(this));
+  for(auto& outlink: outwardly_directed_edges) {
+    Node* neighbor = outlink.first;
+		if(outlink.second > 0.0) { neighbor->recently_updated = true; }
+		auto& n_links = neighbor->inwardly_directed_edges;
+		n_links.erase( n_links.find(this) );
 	}
 }
 

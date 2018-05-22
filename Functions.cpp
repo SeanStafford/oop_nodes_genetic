@@ -88,19 +88,18 @@ bool UpdateNodeList(list<Node>& node_list, bool zero_fit_death) {
 }
 
 // This function calculates the matrix elements of the interaction matrix
-double GetCoefficient(genome_t genome_a, genome_t genome_b, const vector<double>& X, const vector<double>& Y,
+double GetCoefficient(const genome_t a, const genome_t b, const vector<double>& X, const vector<double>& Y,
 	const vector<bool>& connect_x, const vector<bool>& connect_y) {
 
 	// Performs the exclusive or operation between the two genome bitsets
-	genome_t genome_aXORb = genome_a;
-	genome_aXORb ^= genome_b;
+	genome_t aXORb = a ^ b;
 
 	// Stores the decimal representations of the two genomes and the exclusive or of them into ints
-	int genome_a_dec = genome_a.to_ulong();
-	int genome_b_dec = genome_b.to_ulong();
-	int genome_aXORb_dec = genome_aXORb.to_ulong();
+	unsigned long a_dec = a.to_ulong();
+	unsigned long b_dec = b.to_ulong();
+	unsigned long ab_dec = aXORb.to_ulong();
 
-	double coefficient = 0;
+	double coefficient = 0.0;
 	// Calculate the matrix element
 	//// Define:
 	////// a^b = decimal representation of exclusive or operation between genome a and genome b
@@ -108,8 +107,8 @@ double GetCoefficient(genome_t genome_a, genome_t genome_b, const vector<double>
 	////// b = decimal representation of genome b
 	//// If and only if connect_x[a^b + 2(a+1)] and connect_y[a^b + 2(b+1)] are both true, there is a nonzero matrix element
 	//// If there is a nonzero matrix element, it is (X[a^b + 2(a+1)] + Y[a^b + 2(a+1)])/2
-	if (connect_x[genome_aXORb_dec + 2 * (genome_a_dec + 1)] && connect_y[genome_aXORb_dec + 2 * (genome_b_dec + 1)]) {
-		coefficient = (X[genome_aXORb_dec + 2 * (genome_a_dec + 1)] + Y[genome_aXORb_dec + 2 * (genome_b_dec + 1)]) / 2;
+	if (connect_x[ab_dec + 2 * (a_dec + 1)] && connect_y[ab_dec + 2 * (b_dec + 1)]) {
+		coefficient = (X[ab_dec + 2 * (a_dec + 1)] + Y[ab_dec + 2 * (b_dec + 1)]) / 2;
 	}
 
 	return coefficient;

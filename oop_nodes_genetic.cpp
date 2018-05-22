@@ -80,19 +80,19 @@ int main(int argc, char* argv[]) {
 	//// GenerateInitialGenomes creates a vector of the decimal representations of choosen genomes
 	vector<int> initial_genomes = GenerateInitialGenomes(param.initial_population_size, unif_dist, generator, param.GenomeSpace());
 	//// Initialize iterator for vector
-	list<Node>::iterator itr = node_list.begin();
-	for (int i = 0; i < node_list.size(); ++i) {
-		itr->AssignGenome(initial_genomes[i]);
-		IterateCyclically(itr, node_list);
+	{
+    auto itr = node_list.begin();
+    for (int i = 0; i < node_list.size(); ++i, ++itr) {
+      itr->AssignGenome(initial_genomes[i]);
+    }
 	}
 	//// cout a progress report
 	PrintOutMessage(2);
 
 	// Now iterate through intitial community, generating edges for each new node
-	for (int i = 0; i < node_list.size(); ++i) {
-		itr->PickEdgesToForm(node_list, itr, X, Y, connect_x, connect_y);
-		IterateCyclically(itr, node_list);
-	}
+  for(Node& node : node_list) {
+    node.PickEdgesToForm(node_list, X, Y, connect_x, connect_y);
+  }
 	//// cout a progress report
 	PrintOutMessage(3);
 
@@ -119,7 +119,7 @@ int main(int argc, char* argv[]) {
 		int temp_rand_index = unif_dist(generator) * node_list.size();
 		//// Reset iterator because it may be pointing to a Node object that was eliminated in an UpdateNodeList step
 		//// Then set iterator to selected species and retrieve its genome
-		itr = node_list.begin();
+		auto itr = node_list.begin();
 		IterateCyclically(itr, node_list, temp_rand_index);
 		genome_t old_genome = itr->ReturnGenome();
 		//// Now add a species without specifying its genome and set the iterator to the newly added species.
@@ -149,7 +149,7 @@ int main(int argc, char* argv[]) {
 		if (new_is_duplicate) { node_list.erase(itr); }
 		//// Otherwise generate edges for each node and dispose of any nodes that can no longer survive
 		else {
-			itr->PickEdgesToForm(node_list, itr, X, Y, connect_x, connect_y);
+			itr->PickEdgesToForm(node_list, X, Y, connect_x, connect_y);
 			while (UpdateNodeList(node_list, param.zero_fitness_extinction)) {};
 		}
 

@@ -11,19 +11,22 @@ void Node::Mutate(genome_t old_genome, uniform_real_distribution<double> dist, d
 }
 
 // Forms edges between a newly created node and existing nodes
-void Node::PickEdgesToForm(list<Node>& node_list, list<Node>::iterator this_element, vector<double> X, vector<double> Y, vector<bool> connect_x, vector<bool> connect_y) {
+void Node::PickEdgesToForm(list<Node>& node_list, const vector<double>& X, const vector<double>& Y, const vector<bool>& connect_x, const vector<bool>& connect_y) {
 	// Cycle through all nodes except this one
-	for (int i = 0; i < node_list.size() - 1; ++i) {
-		IterateCyclically(this_element, node_list);
+	for( Node& node : node_list ) {
+		if(&node == this) {
+			continue;
+		}
+
 		//// Find the interaction coefficient from the current node to the node i + 1 along in the list. If the coefficient
 		//// is nonzero form store this information in the respective pointer maps of the relevant nodes
-		float coeff = GetCoefficient(genome, this_element->ReturnGenome(), X, Y, connect_x, connect_y);
-		if (coeff) { FormOutwardEdge(&(*this_element), coeff); }
+		float coeff = GetCoefficient(genome, node.ReturnGenome(), X, Y, connect_x, connect_y);
+		if (coeff) { FormOutwardEdge(&node, coeff); }
 
 		//// Find the interaction coefficient from the node i + 1 along in the list to the current node. If the coefficient
 		//// is nonzero form store this information in the respective pointer maps of the relevant nodes
-		coeff = GetCoefficient(this_element->ReturnGenome(), genome, X, Y, connect_x, connect_y);
-		if (coeff) { FormInwardEdge(&(*this_element), coeff); }
+		coeff = GetCoefficient(node.ReturnGenome(), genome, X, Y, connect_x, connect_y);
+		if (coeff) { FormInwardEdge(&node, coeff); }
 
 		//// Note: While the initial community is being formed, running both FormOutwardEdge and FormInwardEdge is redundant.
 		//// However, this is fine, because the map insertion operation does nothing if you attempt to dublicate keys.

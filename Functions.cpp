@@ -148,8 +148,8 @@ bool UpdateNodeList(list<Node>& node_list, bool zero_fit_death) {
 }
 
 // This function calculates the matrix elements of the interaction matrix
-double GetCoefficient(genome_t genome_a, genome_t genome_b, vector<double>& X, vector<double>& Y,
-	vector<bool>& connect_x, vector<bool>& connect_y) {
+double GetCoefficient(genome_t genome_a, genome_t genome_b, const vector<double>& X, const vector<double>& Y,
+	const vector<bool>& connect_x, const vector<bool>& connect_y) {
 
 	// Performs the exclusive or operation between the two genome bitsets
 	genome_t genome_aXORb = genome_a;

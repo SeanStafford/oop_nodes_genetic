@@ -28,8 +28,8 @@ void IterateCyclically(list<Node>::iterator& my_iterator, list<Node>& my_list, i
 bool UpdateNodeList(list<Node>& node_list, bool zero_fit_death);
 
 // This function calculates the matrix elements of the interaction matrix
-double GetCoefficient(genome_t genome_a, genome_t genome_b, vector<double>& X, vector<double>& Y,
-	vector<bool>& connect_x, vector<bool>& connect_y);
+double GetCoefficient(genome_t genome_a, genome_t genome_b, const vector<double>& X, const vector<double>& Y,
+	const vector<bool>& connect_x, const vector<bool>& connect_y);
 
 // I didn't comment out this function in depth, but it essentially calculates the correlation between the coefficients of
 // interaction for pairs of nodes as a function of the Hamming distance between the pairs

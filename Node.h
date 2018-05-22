@@ -16,7 +16,7 @@ public:
 		recently_updated = true;
 	}
 
-	void PickEdgesToForm(list<Node>&, list<Node>::iterator, vector<double>, vector<double>, vector<bool>, vector<bool>);
+	void PickEdgesToForm(list<Node>&, const vector<double>& X, const vector<double>& Y, const vector<bool>& cX, const vector<bool>& cY);
 
 	void FormInwardEdge(Node*, float);
 
@@ -42,7 +42,7 @@ public:
 
 	vector<double> ReturnOutWardEdges(list<Node>&, list<Node>::iterator);
 
-	genome_t ReturnGenome() { return genome; }
+	genome_t ReturnGenome() const { return genome; }
 
 	void AssignGenome(int gen) { genome = gen; }
 

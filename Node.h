@@ -18,9 +18,9 @@ public:
 
 	void PickEdgesToForm(list<Node>&, const vector<double>& X, const vector<double>& Y, const vector<bool>& cX, const vector<bool>& cY);
 
-	void FormInwardEdge(Node*, float);
+	void FormInwardEdge(Node* neighbor, double w);
 
-	void FormOutwardEdge(Node*, float);
+	void FormOutwardEdge(Node* neighbor, double w);
 
 	void UpdateSum();
 

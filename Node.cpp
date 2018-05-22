@@ -20,7 +20,7 @@ void Node::PickEdgesToForm(list<Node>& node_list, const vector<double>& X, const
 
 		//// Find the interaction coefficient from the current node to the node i + 1 along in the list. If the coefficient
 		//// is nonzero form store this information in the respective pointer maps of the relevant nodes
-		float coeff = GetCoefficient(genome, node.ReturnGenome(), X, Y, connect_x, connect_y);
+		double coeff = GetCoefficient(genome, node.ReturnGenome(), X, Y, connect_x, connect_y);
 		if (coeff) { FormOutwardEdge(&node, coeff); }
 
 		//// Find the interaction coefficient from the node i + 1 along in the list to the current node. If the coefficient
@@ -33,7 +33,7 @@ void Node::PickEdgesToForm(list<Node>& node_list, const vector<double>& X, const
 	}
 }
 
-void Node::FormOutwardEdge(Node* node_receiving_edge, float coeff) {
+void Node::FormOutwardEdge(Node* node_receiving_edge, double coeff) {
 	// Store a pointer to the node whose fitness you are affecting along with the coefficient of interaction in your outward map
 	outwardly_directed_edges.insert(pair<Node*, double>(node_receiving_edge, coeff));
 	// Go to the the node whose fitness you are affecting. Store a pointer to yourself along with the coefficient of interaction in
@@ -43,7 +43,7 @@ void Node::FormOutwardEdge(Node* node_receiving_edge, float coeff) {
 	if (coeff <= 0) { node_receiving_edge->recently_updated = true; }
 }
 
-void Node::FormInwardEdge(Node* node_giving_edge, float coeff) {
+void Node::FormInwardEdge(Node* node_giving_edge, double coeff) {
 	// Store a pointer to the node which is affecting your fitness along with the coefficient of interaction in your inward map
 	inwardly_directed_edges.insert(pair<Node*, double>(node_giving_edge, coeff));
 	// If the new edge has a negative weight, it may make fitness nonpositive so this node is flagged

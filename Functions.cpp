@@ -35,56 +35,27 @@ vector<int> GenerateInitialGenomes(int network_size, uniform_real_distribution<d
 // Checks if any recently updated nodes need to be deleted
 // For each node that needs deletion, it calls Disentangle and then deletes it.
 bool UpdateNodeList(list<Node>& node_list, bool zero_fit_death) {
-
-	// If dead_nodes_found is true by the end of this function call, UpdateNodeList needs to be run again.
-	bool dead_nodes_found = false;
-
 	// Search for dead nodes
 	//// Initialize one iterator to iterate through all nodes and one to locate the best current candidate for death
-	list<Node>::iterator temp_itr = node_list.begin();
-	list<Node>::iterator potential_dead_node_itr;
-
-	for (int i = 0; i < node_list.size(); ++i) {
-		//// If the node has been flagged as recently checked it may be dead
-		if (temp_itr->CheckRecentlyUpdated()) {
-			////// Update the node's sum
-			temp_itr->UpdateSum();
-			
-			////// zero_fit_death comes from the commandline. If it is true, a node with 0 fitness will die if all other
-			////// nodes have positive fitnesses. If it is false, only nodes with negative fitnesses can die
-			if (temp_itr->ReturnSum() < 0.0 || (temp_itr->ReturnSum() == 0.0 && zero_fit_death)) {
-				////// The first node that meets the conditions necessary for death is our first candidate for death
-				if (!dead_nodes_found) {
-					dead_nodes_found = true;
-					potential_dead_node_itr = temp_itr++;
-				}
-				////// If a node meets the conditions necessary for death and it is not the first such node, it must be compared
-				////// to the current candidate for death. If its fitness is lower than the current candidate, it becomes the current
-				////// candidate. If not, we ignore it for the rest of this function call
-				else {
-					if (temp_itr->ReturnSum() < potential_dead_node_itr->ReturnSum()) {
-						potential_dead_node_itr = temp_itr;
-					}
-					temp_itr++;
-				}
-			}
-			////// If a node does not meet the conditions necessary for death it will be ignored for the remainder of this function call
-			else { (temp_itr++)->ResetRecentlyUpdated(); }
+	auto smallest = node_list.begin();
+  for(auto it = node_list.begin(); it != node_list.end(); ++it) {
+    if( it->CheckRecentlyUpdated() ) {
+			it->UpdateSum();
+      double f = it->ReturnSum();
+			if( f > 0 ) { it->ResetRecentlyUpdated(); } // the species doesn't have a negative fitness
+			if(f < smallest->ReturnSum()) { smallest = it; };
 		}
-		//// If the node has not been flagged as recently checked it is not dead so no need to do anything with it
-		else { temp_itr++; }
 	}
 
-
-	// If there is a dead node, delete it
-	if (dead_nodes_found) {
+	if(smallest->ReturnSum() < 0.0 || (smallest->ReturnSum() == 0.0 && zero_fit_death)) {
 		//// Remove pointers to other nodes
-		potential_dead_node_itr->Disentangle();
+		smallest->Disentangle();
 		//// Remove node from node list
-		node_list.erase(potential_dead_node_itr);
+		node_list.erase(smallest);
+		return true;
 	}
 
-	return dead_nodes_found;
+	return false;
 }
 
 // This function calculates the matrix elements of the interaction matrix

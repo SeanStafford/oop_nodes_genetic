@@ -120,36 +120,37 @@ int main(int argc, char* argv[]) {
 		//// Reset iterator because it may be pointing to a Node object that was eliminated in an UpdateNodeList step
 		//// Then set iterator to selected species and retrieve its genome
 		auto itr = node_list.begin();
-		IterateCyclically(itr, node_list, temp_rand_index);
+		for(int i=0; i < temp_rand_index; i++) { ++itr; }
 		genome_t old_genome = itr->ReturnGenome();
 		//// Now add a species without specifying its genome and set the iterator to the newly added species.
 		node_list.push_back(Node());
-		itr = --node_list.end();
+    const auto new_node = --node_list.end();
 		//// Then use Mutate to set the species' genome to a bitstring 1 Hamming distance from old_genome
-		itr->Mutate(old_genome, unif_dist, generator, param.genome_length);
+		new_node->Mutate(old_genome, unif_dist, generator, param.genome_length);
 
 		// Check if mutant already existed among living species
 		//// Retrieve the newly created genome
-		genome_t new_genome = itr->ReturnGenome();
+		genome_t new_genome = new_node->ReturnGenome();
 		//// Create a flag for detecting whether the genome is a duplicate
-		bool new_is_duplicate = false;
 		//// Check each nodes to see if its genome matches new_genome until (1) the duplicate flag is set off or (2) all
 		//// old nodes have been checked (the new one will always match itself obviously)
-		for (int i = 0; i < node_list.size() - 1; ++i) {
-			if (!new_is_duplicate) {
-				IterateCyclically(itr, node_list);
-				if (itr->ReturnGenome() == new_genome) { new_is_duplicate = true; }
+		bool new_is_duplicate = false;
+		for( const Node& n : node_list ) {
+			if( &n == &(*new_node) ) { continue; }
+			if( n.ReturnGenome() == new_genome ) {
+				new_is_duplicate = true;
+				break;
 			}
 		}
 
 		// Update node according to whether the genome was a duplicate
-		//// Reset iterator to new node
-		itr = --node_list.end();
 		//// If it is a duplicate delete it
-		if (new_is_duplicate) { node_list.erase(itr); }
+		if (new_is_duplicate) {
+			node_list.erase(new_node);
+		}
 		//// Otherwise generate edges for each node and dispose of any nodes that can no longer survive
 		else {
-			itr->PickEdgesToForm(node_list, X, Y, connect_x, connect_y);
+			new_node->PickEdgesToForm(node_list, X, Y, connect_x, connect_y);
 			while (UpdateNodeList(node_list, param.zero_fitness_extinction)) {};
 		}
 

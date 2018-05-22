@@ -35,6 +35,7 @@ public:
     std::cout
         << "checking_correlation : " << checking_correlation << std::endl
         << "zero_fitness_extinction : " << zero_fitness_extinction << std::endl
+        << "genome_length : " << genome_length << std::endl
         << "initial_population_size : " << initial_population_size << std::endl
         << "link_density : " << link_density << std::endl
         << "total_steps : " << total_steps << std::endl
@@ -70,6 +71,12 @@ public:
     }
     if( total_steps < output_steps ) {
       throw "output_steps must be smaller than total_steps";
+    }
+    if( genome_length > 64) {
+      throw "genome length cannot be longer than 64";
+    }
+    if( c < 0.0 || c > 1.0) {
+      throw "c must be in [0,1]";
     }
 
     ModelParameters param(check_corr, zero_fitness_ext, genome_length, init_pop_size, c, total_steps, output_steps, seed);

@@ -69,12 +69,10 @@ int main(int argc, char* argv[]) {
 
 	// Initialize linked list for Node objects
 	list<Node> node_list;
-	//// A counter is used to count how many total nodes have been made (for debugging purposes)
-	//// The counter is advanced by 1 in the Node Constructor function
-	int highest_id = 0;
+
 	//// The linked list is filled with Node objects that don't have any attributes yet except the node counter
 	//// model_parameters[4] is the commandline parameter for initial community size 
-	for (int i = 0; i < param.initial_population_size; ++i) { node_list.push_back(Node(highest_id)); }
+	for (int i = 0; i < param.initial_population_size; ++i) { node_list.push_back(Node()); }
 	//// cout a progress report
 	PrintOutMessage(1);
 
@@ -125,7 +123,7 @@ int main(int argc, char* argv[]) {
 		IterateCyclically(itr, node_list, temp_rand_index);
 		genome_t old_genome = itr->ReturnGenome();
 		//// Now add a species without specifying its genome and set the iterator to the newly added species.
-		node_list.push_back(Node(highest_id));
+		node_list.push_back(Node());
 		itr = --node_list.end();
 		//// Then use Mutate to set the species' genome to a bitstring 1 Hamming distance from old_genome
 		itr->Mutate(old_genome, unif_dist, generator, param.genome_length);

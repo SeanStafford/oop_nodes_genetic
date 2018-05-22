@@ -11,7 +11,8 @@ typedef bitset<64> genome_t;
 
 class Node {
 public:
-	Node(int& former_highest_id) :id(++former_highest_id) {
+	static int highest_id;
+	Node() :id(++highest_id) {
 		recently_updated = true;
 	}
 
@@ -50,7 +51,7 @@ protected:
 	bool recently_updated;
 	
 	// Counts how many nodes have been created as of the creation of this node 
-	int id;
+	const int id;
 
 	// Sum of weights of all inwardly directed edges
 	double fitness; 

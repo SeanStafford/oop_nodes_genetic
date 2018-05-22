@@ -1,4 +1,5 @@
 #include "Functions.h"
+#include <set>
 
 using namespace std;
 
@@ -11,25 +12,16 @@ void PrintOutMessage(int message_id) {
 
 // Pick which species exist in initial network
 vector<int> GenerateInitialGenomes(int network_size, uniform_real_distribution<double> dist, default_random_engine gen, long genome_space) {
-	//// Initialize vector of bools of a size equal to the number of possible species. Each bool represents whether
-	//// that species has been choosen yet to exist in the initial network. Initially all bools are false.
-	vector<bool> genome_options(genome_space, false);
-	//// Initialize a vector of ints that are the decimal representations of the genomes of species that will exist
-	//// in the initial network.
-	vector<int> genome_list(network_size, 0);
-	//// Initialize an int to be the random number
-	int temp_rand;
-	//// Do the following once for each node in the initial network
-	for (int i = 0; i < network_size; i++) {
-		//// ( temp_rand = (dist(gen) * genome_space) + 1) always evaluates as true because the range does not include 0
-		//// (genome_options[temp_rand - 1]) only evaluates true if temp_rand has been previously choosen
-		while ((temp_rand = (dist(gen) * genome_space) + 1) && (genome_options[temp_rand - 1])) {}
-		//// Don't allow this genome to be picked again
-		genome_options[temp_rand - 1] = true;
-		//// Store the choosen decimal representation of the genome
-		genome_list[i] = temp_rand - 1;
+	set<int> s;
+	vector<int> genome_list;
+	while( s.size() < network_size ) {
+		int r = static_cast<int>(genome_space * dist(gen));
+    if( s.find(r) == s.end() ) {
+      genome_list.push_back(r);
+			s.insert(r);
+		}
 	}
-	return genome_list;
+	return std::move(genome_list);
 }
 
 // Checks if any recently updated nodes need to be deleted

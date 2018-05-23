@@ -34,9 +34,9 @@ public:
 
 	void Disentangle();
 
-	int CountInDegree() { return inwardly_directed_edges.size(); }
+	int CountInDegree() const { return inwardly_directed_edges.size(); }
 
-	int CountOutDegree() { return outwardly_directed_edges.size(); }
+	int CountOutDegree() const { return outwardly_directed_edges.size(); }
 
 	int ReturnID() const { return id; }
 

@@ -162,7 +162,9 @@ int main(int argc, char* argv[]) {
 
 		// Every x steps print the network size to the output file. x is specified by the commandline parameter model_parameters[7]
 		if (step % param.output_steps == 0) {
-			output_file << step << ' ' << node_list.size() << endl;
+      double ave_deg = 0.0;
+      for(const Node& n: node_list) { ave_deg += n.CountInDegree(); }
+			output_file << step << ' ' << node_list.size() << ' ' << ave_deg/node_list.size() << endl;
 		}
     total_steps = step+1;
     average += node_list.size();

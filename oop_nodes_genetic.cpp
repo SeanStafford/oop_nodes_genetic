@@ -162,7 +162,7 @@ int main(int argc, char* argv[]) {
 
 		// Every x steps print the network size to the output file. x is specified by the commandline parameter model_parameters[7]
 		if (step % param.output_steps == 0) {
-			output_file << node_list.size() << endl;
+			output_file << step << ' ' << node_list.size() << endl;
 		}
     total_steps = step+1;
     average += node_list.size();

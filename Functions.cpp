@@ -4,10 +4,10 @@
 using namespace std;
 
 void PrintOutMessage(int message_id) {
-	if (message_id == 1) { cout << "generated nodes of initial community" << endl; }
-	else if (message_id == 2) { cout << "assigned genomes to initial community" << endl; }
-	else if (message_id == 3) { cout << "added edges to initial community" << endl; }
-	else if (message_id == 4) { cout << "updated initial community" << endl; }
+	if (message_id == 1) { cerr << "generated nodes of initial community" << endl; }
+	else if (message_id == 2) { cerr << "assigned genomes to initial community" << endl; }
+	else if (message_id == 3) { cerr << "added edges to initial community" << endl; }
+	else if (message_id == 4) { cerr << "updated initial community" << endl; }
 }
 
 // Pick which species exist in initial network

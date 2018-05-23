@@ -32,7 +32,7 @@ public:
   }
 
   void Print() {
-    std::cout
+    std::cerr
         << "checking_correlation : " << checking_correlation << std::endl
         << "zero_fitness_extinction : " << zero_fitness_extinction << std::endl
         << "genome_length : " << genome_length << std::endl

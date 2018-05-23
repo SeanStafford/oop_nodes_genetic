@@ -15,6 +15,7 @@
 #include "Node.h"
 #include "Functions.h"
 #include "ModelParameters.hpp"
+#include "Results.hpp"
 
 
 
@@ -102,7 +103,10 @@ int main(int argc, char* argv[]) {
 	while (UpdateNodeList(node_list, param.zero_fitness_extinction)) {};
 	//// cout a progress report
 	PrintOutMessage(4);
-	cout << "The initial population size is " << node_list.size() << endl;
+
+  Results results;
+  results.initial_population_size = node_list.size();
+	cerr << "The initial population size is " << node_list.size() << endl;
 
 	// Create output file for time series data
 	ofstream output_file("TimeSeries.txt");
@@ -111,6 +115,8 @@ int main(int argc, char* argv[]) {
 	//// Initialize a timestep counter for the main while loop
 	//// While loop can be ended if either (1) all Node objects are gone or (2) The number of steps has exceeded the
 	//// the amount specified by the commandline parameter model_parameters[6]
+  long average = 0;
+  long total_steps = 0;
 	for( int step = 0; step < param.total_steps; step++) {
 		if( node_list.size() == 0 ) { break; }
 		// Add a new mutant species to the network
@@ -158,10 +164,19 @@ int main(int argc, char* argv[]) {
 		if (step % param.output_steps == 0) {
 			output_file << node_list.size() << endl;
 		}
+    total_steps = step+1;
+    average += node_list.size();
 	}
+  results.average_population_size = (double)average / total_steps;
+  results.total_steps = total_steps;
+  results.final_population_size = node_list.size();
 
 	// cout the final population so I check the stdout file to see if the network survived.
-	cout << "The final population size is " << node_list.size() << endl;
+	cerr << "The final population size is " << results.final_population_size << endl;
+
+  std::ofstream fout("_output.json");
+  results.PrintJson(fout);
+  fout.close();
 
 	// Close output file and end program
 	output_file.close();

@@ -8,4 +8,4 @@ add_executable(oop_nodes_genetic
         Functions.cpp
         Node.h
         Node.cpp
-        oop_nodes_genetic.cpp ModelParameters.hpp)
+        oop_nodes_genetic.cpp ModelParameters.hpp Results.hpp)

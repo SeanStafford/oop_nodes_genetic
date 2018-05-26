@@ -18,7 +18,7 @@ public:
 		link_density(density),
 		total_steps(total_steps),
 		output_steps(output_steps),
-		matrix_seed(s_matrix) {},
+		matrix_seed(s_matrix),
       seed(s) {};
   const bool checking_correlation;
   const bool zero_fitness_extinction;  // true: make zero-fitness species go extinct. false: let it survive.

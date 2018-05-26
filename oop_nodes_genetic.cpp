@@ -36,7 +36,9 @@ int main(int argc, char* argv[]) {
 	////// choose which species are in the initial community
 	////// choose which species is mutated to form new species
 	////// choose which bit is flipped when creating a mutant species
+	//// I use matrix_generator to populate the X, Y, x_connect and y_connect vectors and generator for everything else
 	default_random_engine generator(param.seed ? param.seed : time(0));
+	default_random_engine matrix_generator(param.matrix_seed ? param.matrix_seed : time(0));
 	normal_distribution<double> norm_dist(0, 1);
 	uniform_real_distribution<double> unif_dist(0.0, 1.0);
 
@@ -46,17 +48,17 @@ int main(int argc, char* argv[]) {
 	vector<bool> connect_x(3 * param.GenomeSpace(), false);
 	vector<bool> connect_y(3 * param.GenomeSpace(), false);
 	//// I populate X & Y using the default_random_generator and normal_distribution
-	for (int i = 0; i < X.size(); i++) { X[i] = norm_dist(generator); }
-	for (int i = 0; i < Y.size(); i++) { Y[i] = norm_dist(generator); }
+	for (int i = 0; i < X.size(); i++) { X[i] = norm_dist(matrix_generator); }
+	for (int i = 0; i < Y.size(); i++) { Y[i] = norm_dist(matrix_generator); }
 	//// I populate connect_x and connect_y using uniform_real_distribution to determine if the bool should be true
 	//// The probability of connection, c, is stored as model_parameters[5]. The AND operator is used with a bool from each 
 	//// vector to determine if they are connected to the probability of a bool in each vector being true must be
 	//// sqrt(c) to make the probability of connection c
 	for (int i = 0; i < connect_x.size(); i++) {
-		if (unif_dist(generator) < sqrt(param.link_density)) { connect_x[i] = true; }
+		if (unif_dist(matrix_generator) < sqrt(param.link_density)) { connect_x[i] = true; }
 	}
 	for (int i = 0; i< connect_y.size(); i++) {
-		if (unif_dist(generator) < sqrt(param.link_density)) { connect_y[i] = true; }
+		if (unif_dist(matrix_generator) < sqrt(param.link_density)) { connect_y[i] = true; }
 	}
 
 	// Sometimes I am just interested in checking how correlated the interaction matrix is.

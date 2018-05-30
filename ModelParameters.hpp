@@ -41,7 +41,7 @@ public:
         << "initial_population_size : " << initial_population_size << std::endl
         << "link_density : " << link_density << std::endl
         << "total_steps : " << total_steps << std::endl
-		<< "coefficient_distribution_mean : " << mean << std:endl
+		<< "coefficient_distribution_mean : " << mean << std::endl
         << "output_steps : " << output_steps << std::endl;
   }
 

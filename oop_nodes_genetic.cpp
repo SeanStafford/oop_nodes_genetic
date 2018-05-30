@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
 	////// choose which species is mutated to form new species
 	////// choose which bit is flipped when creating a mutant species
 	default_random_engine generator(param.seed ? param.seed : time(0));
-	normal_distribution<double> norm_dist(0, 1);
+	normal_distribution<double> norm_dist(param.mean, 1);
 	uniform_real_distribution<double> unif_dist(0.0, 1.0);
 
 	// I initialize the X, Y, connect_x and connect_y vectors that will be used to generate the interaction matrix

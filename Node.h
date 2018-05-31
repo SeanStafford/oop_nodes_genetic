@@ -20,7 +20,7 @@ public:
 
 	vector<int> lifespans;
 
-	int burn_in_id;
+	const int burn_in_id;
 
 	void PickEdgesToForm(list<Node>&, const vector<double>& X, const vector<double>& Y, const vector<bool>& cX, const vector<bool>& cY);
 

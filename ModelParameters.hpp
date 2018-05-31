@@ -90,7 +90,7 @@ public:
       throw "c must be in [0,1]";
     }
 
-    ModelParameters param(check_corr, zero_fitness_ext, genome_length, init_pop_size, c, total_steps, output_steps, mean, burn_in seed);
+    ModelParameters param(check_corr, zero_fitness_ext, genome_length, init_pop_size, c, total_steps, output_steps, mean, burn_in, seed);
     return std::move(param);
   }
 };

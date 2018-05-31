@@ -88,4 +88,5 @@ void Node::UpdateLifespanDistribution() {
 		death_count++;
 		lifespans[death_count] = highest_id - id;
 	}
+	cout << "Left UpdateLifespanDistribution" << endl;
 }

@@ -16,9 +16,9 @@ public:
 		recently_updated = true;
 	}
 
-	int death_count = 0;
+	static int death_count;
 
-	vector<int> lifespans;
+	static vector<int> lifespans;
 
 	static int burn_in_id;
 

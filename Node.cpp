@@ -2,6 +2,10 @@
 #include "Functions.h"
 
 int Node::highest_id = 0;
+int Node::death_count = 0;
+int Node::burn_in_id;
+vector<int> Node::lifespans;
+
 
 // Randomly choose one bit to flip. Flip the choosen bit. Then set the modified bitstring as the genome.
 void Node::Mutate(genome_t old_genome, uniform_real_distribution<double> dist, default_random_engine gen, long genome_size) {

@@ -159,7 +159,7 @@ int main(int argc, char* argv[]) {
 
 		if (new_is_duplicate) {
 			node_list.erase(new_node);
-			cout << "There have been " << how_many_dublicates++ " duplicates" << endl;
+			cout << "There have been " << how_many_dublicates++ << " duplicates" << endl;
 		}
 		//// Otherwise generate edges for each node and dispose of any nodes that can no longer survive
 		else {

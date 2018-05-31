@@ -84,8 +84,7 @@ int main(int argc, char* argv[]) {
 
     auto itr = node_list.begin();
 	// Initiate lifespan distribution with size and burn in information
-	int burn_in = 1000;
-	itr->InitiateLifespanDistribution(param.initial_population_size, param.total_steps, burn_in);
+	itr->InitiateLifespanDistribution(param.initial_population_size, param.total_steps, param.burn_in);
     for (int i = 0; i < node_list.size(); ++i, ++itr) {
       itr->AssignGenome(initial_genomes[i]);
     }

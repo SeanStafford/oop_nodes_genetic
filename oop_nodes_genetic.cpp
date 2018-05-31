@@ -188,6 +188,7 @@ int main(int argc, char* argv[]) {
 
 	auto iter = node_list.begin();
 	iter->lifespans.resize(iter->death_count);
+	lifespan_fle << "There were " << iter->death_count << " deaths." << endl;
 	for (int lifespan : iter->lifespans) {
 		lifespan_fle << lifespan << endl;
 	}

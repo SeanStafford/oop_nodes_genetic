@@ -110,11 +110,12 @@ int main(int argc, char* argv[]) {
 
 	// Initiate lifespan distribution with size and burn in information
 	int burn_in = 1000;
-	Node::InitiateLifespanDistribution(param.initial_population_size, param.total_steps, burn_in);
+	auto itr = node_list.begin();
+	itr->InitiateLifespanDistribution(param.initial_population_size, param.total_steps, burn_in);
 
 	// Create output file for time series data and lifespan distribution data
 	ofstream timeseries_file("TimeSeries.txt");
-	ofstream lifespan_fle("Lifespans.txt")
+	ofstream lifespan_fle("Lifespans.txt");
 
 	// Main While Loop
 	//// Initialize a timestep counter for the main while loop

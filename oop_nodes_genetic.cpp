@@ -188,9 +188,9 @@ int main(int argc, char* argv[]) {
 
 	timeseries_file.close();
 
-	auto itr = node_list.begin();
-	itr->lifespans.resize(itr->death_count);
-	for (int lifespan : itr->lifespans) {
+	auto iter = node_list.begin();
+	iter->lifespans.resize(iter->death_count);
+	for (int lifespan : iter->lifespans) {
 		lifespan_fle << lifespan << endl;
 	}
 	lifespan_fle.close();

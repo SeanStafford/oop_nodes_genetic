@@ -83,6 +83,7 @@ void Node::InitiateLifespanDistribution(int initial_size, int total_steps, int b
 }
 
 void Node::UpdateLifespanDistribution() {
+	cout << "Reached UpdateLifespanDistribution."
 	if (highest_id >= burn_in_id) {
 		death_count++;
 		lifespans[death_count] = highest_id - id;

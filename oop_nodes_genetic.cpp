@@ -83,6 +83,9 @@ int main(int argc, char* argv[]) {
 	//// Initialize iterator for vector
 	{
     auto itr = node_list.begin();
+	// Initiate lifespan distribution with size and burn in information
+	int burn_in = 1000;
+	itr->InitiateLifespanDistribution(param.initial_population_size, param.total_steps, burn_in);
     for (int i = 0; i < node_list.size(); ++i, ++itr) {
       itr->AssignGenome(initial_genomes[i]);
     }
@@ -107,11 +110,6 @@ int main(int argc, char* argv[]) {
   Results results;
   results.initial_population_size = node_list.size();
 	cerr << "The initial population size is " << node_list.size() << endl;
-
-	// Initiate lifespan distribution with size and burn in information
-	int burn_in = 1000;
-	auto itr = node_list.begin();
-	itr->InitiateLifespanDistribution(param.initial_population_size, param.total_steps, burn_in);
 
 	// Create output file for time series data and lifespan distribution data
 	ofstream timeseries_file("TimeSeries.txt");

@@ -119,6 +119,7 @@ int main(int argc, char* argv[]) {
 	//// Initialize a timestep counter for the main while loop
 	//// While loop can be ended if either (1) all Node objects are gone or (2) The number of steps has exceeded the
 	//// the amount specified by the commandline parameter model_parameters[6]
+	int how_many_dublicates = 0;
   long average = 0;
   long total_steps = 0;
 	for( int step = 0; step < param.total_steps; step++) {
@@ -155,8 +156,10 @@ int main(int argc, char* argv[]) {
 
 		// Update node according to whether the genome was a duplicate
 		//// If it is a duplicate delete it
+
 		if (new_is_duplicate) {
 			node_list.erase(new_node);
+			cout << "There have been " << how_many_dublicates++ " duplicates" << endl;
 		}
 		//// Otherwise generate edges for each node and dispose of any nodes that can no longer survive
 		else {

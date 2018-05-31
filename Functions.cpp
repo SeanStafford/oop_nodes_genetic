@@ -40,6 +40,11 @@ bool UpdateNodeList(list<Node>& node_list, bool zero_fit_death) {
 	}
 
 	if(smallest->ReturnSum() < 0.0 || (smallest->ReturnSum() == 0.0 && zero_fit_death)) {
+		//// If past burn-in period, record lifespan of dead node
+		if (Node::highest_id >= Node::burn_in_id) {
+			smallest->UpdateLifespanDistribution();
+		}
+
 		//// Remove pointers to other nodes
 		smallest->Disentangle();
 		//// Remove node from node list

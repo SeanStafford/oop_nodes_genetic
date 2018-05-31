@@ -16,6 +16,12 @@ public:
 		recently_updated = true;
 	}
 
+	int death_count = 0;
+
+	vector<int> lifespans;
+
+	int burn_in_id;
+
 	void PickEdgesToForm(list<Node>&, const vector<double>& X, const vector<double>& Y, const vector<bool>& cX, const vector<bool>& cY);
 
 	void FormInwardEdge(Node* neighbor, double w);
@@ -43,6 +49,10 @@ public:
 	genome_t ReturnGenome() const { return genome; }
 
 	void AssignGenome(int gen) { genome = gen; }
+
+	void InitiateLifespanDistribution(int, int, int);
+
+	void UpdateLifespanDistribution();
 
 protected:
 	// Flag for whether UpdateNodeList can skip this node

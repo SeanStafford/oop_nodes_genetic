@@ -76,3 +76,13 @@ void Node::Disentangle() {
 	}
 }
 
+// Keep track of all lifesspans in order to plot power spectrum of lifetimes later
+void Node::InitiateLifespanDistribution(int initial_size, int total_steps, int burn_in) {
+	lifespans.resize(initial_size + total_steps);
+	burn_in_id = burn_in + initial_size;
+}
+
+void Node::UpdateLifespanDistribution() {
+	death_count++;
+	lifespans[death_count] = highest_id - id;
+}

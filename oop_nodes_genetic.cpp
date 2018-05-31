@@ -108,8 +108,13 @@ int main(int argc, char* argv[]) {
   results.initial_population_size = node_list.size();
 	cerr << "The initial population size is " << node_list.size() << endl;
 
-	// Create output file for time series data
-	ofstream output_file("TimeSeries.txt");
+	// Initiate lifespan distribution with size and burn in information
+	int burn_in = 1000;
+	Node::InitiateLifespanDistribution(param.initial_population_size, param.total_steps, burn_in);
+
+	// Create output file for time series data and lifespan distribution data
+	ofstream timeseries_file("TimeSeries.txt");
+	ofstream lifespan_fle("Lifespans.txt")
 
 	// Main While Loop
 	//// Initialize a timestep counter for the main while loop
@@ -164,7 +169,7 @@ int main(int argc, char* argv[]) {
 		if (step % param.output_steps == 0) {
       double ave_deg = 0.0;
       for(const Node& n: node_list) { ave_deg += n.CountInDegree(); }
-			output_file << step << ' ' << node_list.size() << ' ' << ave_deg/node_list.size() << endl;
+			timeseries_file << step << ' ' << node_list.size() << ' ' << ave_deg/node_list.size() << endl;
 		}
     total_steps = step+1;
     average += node_list.size();
@@ -180,7 +185,13 @@ int main(int argc, char* argv[]) {
   results.PrintJson(fout);
   fout.close();
 
-	// Close output file and end program
-	output_file.close();
+	timeseries_file.close();
+
+	Node::lifespans.resize(Node::death_count);
+	for (int lifespan : Node::lifespans) {
+		lifespan_fle << lifespan << endl;
+	}
+	lifespan_fle.close();
+
 	return 0;
 }

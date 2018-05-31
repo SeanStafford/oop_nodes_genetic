@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
 	//// GenerateInitialGenomes creates a vector of the decimal representations of choosen genomes
 	vector<int> initial_genomes = GenerateInitialGenomes(param.initial_population_size, unif_dist, generator, param.GenomeSpace());
 	//// Initialize iterator for vector
-	{
+
     auto itr = node_list.begin();
 	// Initiate lifespan distribution with size and burn in information
 	int burn_in = 1000;
@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < node_list.size(); ++i, ++itr) {
       itr->AssignGenome(initial_genomes[i]);
     }
-	}
+	
 	//// cout a progress report
 	PrintOutMessage(2);
 
@@ -188,7 +188,6 @@ int main(int argc, char* argv[]) {
 
 	auto iter = node_list.begin();
 	iter->lifespans.resize(iter->death_count);
-	lifespan_fle << "There were " << iter->death_count << " deaths." << endl;
 	for (int lifespan : iter->lifespans) {
 		lifespan_fle << lifespan << endl;
 	}

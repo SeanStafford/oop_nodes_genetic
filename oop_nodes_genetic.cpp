@@ -112,7 +112,6 @@ int main(int argc, char* argv[]) {
 
 	// Create output file for time series data and lifespan distribution data
 	ofstream timeseries_file("TimeSeries.txt");
-	ofstream lifespan_fle("Lifespans.txt");
 
 	// Main While Loop
 	//// Initialize a timestep counter for the main while loop
@@ -186,9 +185,10 @@ int main(int argc, char* argv[]) {
 
 	timeseries_file.close();
 
+  ofstream lifespan_fle("Lifespans.txt");
 	auto iter = node_list.begin();
-	iter->lifespans.resize(iter->death_count);
-	for (int lifespan : iter->lifespans) {
+  Node::lifespans.resize(iter->death_count);
+	for (int lifespan : Node::lifespans) {
 		lifespan_fle << lifespan << endl;
 	}
 	lifespan_fle.close();

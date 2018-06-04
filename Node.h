@@ -4,6 +4,7 @@
 #include <map>
 #include <list>
 #include <random>
+#include "histogram.hpp"
 
 using namespace std;
 
@@ -12,11 +13,11 @@ typedef bitset<64> genome_t;
 class Node {
 public:
 	static int highest_id;
-	Node() :id(++highest_id) {
+  static HistoLogBin lifespan_log_histo;
+	static HistoNormalBin lifespan_lin_histo;
+	Node(long _migrated_at) :id(++highest_id), migrated_at(_migrated_at) {
 		recently_updated = true;
 	}
-
-	static int death_count;
 
 	static vector<int> lifespans;
 
@@ -52,13 +53,14 @@ public:
 
 	void InitiateLifespanDistribution(int, int, int);
 
-	void UpdateLifespanDistribution();
+	void UpdateLifespanDistribution(long step);
 
 protected:
 	// Flag for whether UpdateNodeList can skip this node
 	bool recently_updated;
 	
-	// Counts how many nodes have been created as of the creation of this node 
+	// Counts how many nodes have been created as of the creation of this node
+	const long migrated_at;
 	const int id;
 
 	// Sum of weights of all inwardly directed edges

@@ -26,7 +26,7 @@ vector<int> GenerateInitialGenomes(int network_size, uniform_real_distribution<d
 
 // Checks if any recently updated nodes need to be deleted
 // For each node that needs deletion, it calls Disentangle and then deletes it.
-bool UpdateNodeList(list<Node>& node_list, bool zero_fit_death) {
+bool UpdateNodeList(list<Node>& node_list, bool zero_fit_death, long step) {
 	// Search for dead nodes
 	//// Initialize one iterator to iterate through all nodes and one to locate the best current candidate for death
 	auto smallest = node_list.begin();
@@ -41,7 +41,7 @@ bool UpdateNodeList(list<Node>& node_list, bool zero_fit_death) {
 
 	if(smallest->ReturnSum() < 0.0 || (smallest->ReturnSum() == 0.0 && zero_fit_death)) {
 		//// If past burn-in period, record lifespan of dead node
-		smallest->UpdateLifespanDistribution();
+		smallest->UpdateLifespanDistribution(step);
 
 		//// Remove pointers to other nodes
 		smallest->Disentangle();

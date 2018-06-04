@@ -15,7 +15,7 @@ vector<int> GenerateInitialGenomes(int network_size, uniform_real_distribution<d
 
 // Checks if any recently updated nodes need to be deleted
 // For each node that needs deletion, it calls Disentangle and then deletes it.
-bool UpdateNodeList(list<Node>& node_list, bool zero_fit_death);
+bool UpdateNodeList(list<Node>& node_list, bool zero_fit_death, long step);
 
 // This function calculates the matrix elements of the interaction matrix
 double GetCoefficient(const genome_t a, const genome_t b, const vector<double>& X, const vector<double>& Y,

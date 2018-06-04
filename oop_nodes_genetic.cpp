@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
 
 	//// The linked list is filled with Node objects that don't have any attributes yet except the node counter
 	//// model_parameters[4] is the commandline parameter for initial community size 
-	for (int i = 0; i < param.initial_population_size; ++i) { node_list.push_back(Node()); }
+	for (int i = 0; i < param.initial_population_size; ++i) { node_list.push_back(Node(0)); }
 	//// cout a progress report
 	PrintOutMessage(1);
 
@@ -82,12 +82,14 @@ int main(int argc, char* argv[]) {
 	vector<int> initial_genomes = GenerateInitialGenomes(param.initial_population_size, unif_dist, generator, param.GenomeSpace());
 	//// Initialize iterator for vector
 
+	{
     auto itr = node_list.begin();
 	// Initiate lifespan distribution with size and burn in information
 	itr->InitiateLifespanDistribution(param.initial_population_size, param.total_steps, param.burn_in);
     for (int i = 0; i < node_list.size(); ++i, ++itr) {
       itr->AssignGenome(initial_genomes[i]);
     }
+	}
 	
 	//// cout a progress report
 	PrintOutMessage(2);
@@ -102,7 +104,7 @@ int main(int argc, char* argv[]) {
 	// Dispose of any Node objects whose species do not survive
 	//// model_parameters[2] is a bool from commandline that signals whether 0 fitness species survive
 	//// UpdateNodeList only returns False, ending the while loop, once all remaining species survive
-	while (UpdateNodeList(node_list, param.zero_fitness_extinction)) {};
+	while (UpdateNodeList(node_list, param.zero_fitness_extinction, 0)) {};
 	//// cout a progress report
 	PrintOutMessage(4);
 
@@ -131,7 +133,7 @@ int main(int argc, char* argv[]) {
 		for(int i=0; i < temp_rand_index; i++) { ++itr; }
 		genome_t old_genome = itr->ReturnGenome();
 		//// Now add a species without specifying its genome and set the iterator to the newly added species.
-		node_list.push_back(Node());
+		node_list.push_back(Node(step));
     const auto new_node = --node_list.end();
 		//// Then use Mutate to set the species' genome to a bitstring 1 Hamming distance from old_genome
 		new_node->Mutate(old_genome, unif_dist, generator, param.genome_length);
@@ -160,7 +162,7 @@ int main(int argc, char* argv[]) {
 		//// Otherwise generate edges for each node and dispose of any nodes that can no longer survive
 		else {
 			new_node->PickEdgesToForm(node_list, X, Y, connect_x, connect_y);
-			while (UpdateNodeList(node_list, param.zero_fitness_extinction)) {};
+			while (UpdateNodeList(node_list, param.zero_fitness_extinction, step)) {};
 		}
 
 		// Every x steps print the network size to the output file. x is specified by the commandline parameter model_parameters[7]
@@ -186,10 +188,8 @@ int main(int argc, char* argv[]) {
 	timeseries_file.close();
 
   ofstream lifespan_fle("Lifespans.txt");
-	auto iter = node_list.begin();
-  Node::lifespans.resize(iter->death_count);
-	for (int lifespan : Node::lifespans) {
-		lifespan_fle << lifespan << endl;
+	for (auto kv : Node::lifespan_log_histo.PDF()) {
+		lifespan_fle << kv.first << ' ' << kv.second << endl;
 	}
 	lifespan_fle.close();
 

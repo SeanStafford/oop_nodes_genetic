@@ -2,9 +2,9 @@
 #include "Functions.h"
 
 int Node::highest_id = 0;
-int Node::death_count = 0;
 int Node::burn_in_id;
-vector<int> Node::lifespans;
+HistoLogBin Node::lifespan_log_histo;
+HistoNormalBin Node::lifespan_lin_histo(1.0);
 
 
 // Randomly choose one bit to flip. Flip the choosen bit. Then set the modified bitstring as the genome.
@@ -82,13 +82,15 @@ void Node::Disentangle() {
 
 // Keep track of all lifesspans in order to plot power spectrum of lifetimes later
 void Node::InitiateLifespanDistribution(int initial_size, int total_steps, int burn_in) {
-	lifespans.resize(initial_size + total_steps);
-	burn_in_id = burn_in + initial_size;
+	burn_in_id = burn_in;
 }
 
-void Node::UpdateLifespanDistribution() {
-	if (highest_id > burn_in_id) {
-		death_count++;
-		lifespans[death_count] = highest_id - id;
+void Node::UpdateLifespanDistribution(long step) {
+	if (step > burn_in_id) {
+		long lspan = step - migrated_at;
+    if(lspan > 0) {
+      lifespan_log_histo.Add(lspan);
+      lifespan_lin_histo.Add(lspan);
+		}
 	}
 }

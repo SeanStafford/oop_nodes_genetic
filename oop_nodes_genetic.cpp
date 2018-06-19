@@ -121,8 +121,16 @@ int main(int argc, char* argv[]) {
 	//// the amount specified by the commandline parameter model_parameters[6]
   long average = 0;
   long total_steps = 0;
+
+  int large_network_threshold = 100 / param.link_density;
+
 	for( int step = 0; step < param.total_steps; step++) {
 		if( node_list.size() == 0 ) { break; }
+		if (node_list.size() > large_network_threshold) { 
+			cout << "Created a large network. Terminating program. " << endl;
+			break; 
+		}
+
 		// Add a new mutant species to the network
 		//// First, use uniform_real_distribution to select one of the existing species. The mutant introduced to the network will be
 		//// mutated from this species
